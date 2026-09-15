@@ -1,0 +1,68 @@
+________________________________________________________________________________________________________________
+
+Conexões entre os displays dos leds e o microcontrolador:
+
+Display da Dezena:
+
+A =  A1  PORTC PC1    end hex: DDRC: 0x27 | PORTC: 0x28 (Bit 1)
+B =  A4  PORTC PC4    end hex: DDRC: 0x27 | PORTC: 0x28 (Bit 4)
+C =   8  PORTB PB0    end hex: DDRB: 0x24 | PORTB: 0x25 (Bit 0)
+D =  ~5  PORTD PD5    end hex: DDRD: 0x2A | PORTD: 0x2B (Bit 5)
+E =   2  PORTD PD2    end hex: DDRD: 0x2A | PORTD: 0x2B (Bit 2)
+F =  ~3  PORTD PD3    end hex: DDRD: 0x2A | PORTD: 0x2B (Bit 3)
+G = ~10  PORTB PB2    end hex: DDRB: 0x24 | PORTB: 0x25 (Bit 2)
+
+Display da Centena:
+
+A =  A5  PORTC PC5    end hex: DDRC: 0x27 | PORTC: 0x28 (Bit 5)
+B =  ~9  PORTB PB1    end hex: DDRB: 0x24 | PORTB: 0x25 (Bit 1)
+C =   4  PORTD PD4    end hex: DDRD: 0x2A | PORTD: 0x2B (Bit 4)
+D = ~11  PORTB PB3    end hex: DDRB: 0x24 | PORTB: 0x25 (Bit 3)
+E =   7  PORTD PD7    end hex: DDRD: 0x2A | PORTD: 0x2B (Bit 7)
+F =  13  PORTB PB5    end hex: DDRB: 0x24 | PORTB: 0x25 (Bit 5)
+G =  A0  PORTC PC0    end hex: DDRC: 0x27 | PORTC: 0x28 (Bit 0)
+
+
+Pinos Analógicos: A0 a A5 pertencem ao PORTC
+Pinos Digitais: 0 a 7 pertencem ao PORTD, 8 a 13 pertencem ao PORTB
+
+________________________________________________________________________________________________________________
+
+Registradores:
+
+Ligar a interrupção do grupo C usando o PCINT e do PCINT11 (que é o do A3) em especícico usando PCMSK1
+Entrada = A3 PC3
+
+utilize a interrupção PCINT associada ao terminal A3 da placa = 
+Ligar o bit que habilita interrupção pelo grupo c -> PCINT1 (bit 1 do PCICR (0x68))
+Nome rotina de tratamento: (PCINT1_vect)
+
+O grupo PCINT1 cuida de todos os pinos do Port C (os canais que vão de PCINT8 até PCINT14).
+PCINT11 está no bit 3 do PCMSK1 (0x6c)
+
+________________________________________________________________________________________________________________
+
+Configurar A3 como entrada
+ddrc em 0 -> Entrada
+portc em 1 (verificar)
+
+Configurar todos os ponteiros dos displays do led como saída
+
+B é bit 5
+D é bit 2
+C é o bit
+
+
+Para encontrar o endereço hex é página 621 do Datasheet
+Para encontrar                é a página 79 do Datasheet
+
+________________________________________________________________________________________________________________
+
+
+escolha de 1000 ms de delay
+separar centena e Dezena
+escrever lógica de separar o digito da dezena e o da centena
+
+________________________________________________________________________________________________________________
+
+Lógica do switch case:

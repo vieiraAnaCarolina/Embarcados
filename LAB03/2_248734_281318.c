@@ -1,5 +1,3 @@
-/* Maria Letícia Gomes Braga dos Reis - 281318 e Ana Carolina Vieira de Araújo - 248734 */
-
 #define F_CPU 16000000UL
 #include <avr/interrupt.h>
 #include <util/delay.h>
@@ -14,6 +12,7 @@ volatile unsigned char *ponteiro_pind  = (volatile unsigned char *) 0x29;
 
 volatile unsigned char *ponteiro_pcicr = (volatile unsigned char *) 0x68;
 volatile unsigned char *ponteiro_pcmsk2 = (volatile unsigned char *) 0x6D; 
+volatile unsigned char *ponteiro_pcifr =  (volatile unsigned char *) 0x3B;
 
 void config(void) {
     cli();                                  // desativa as interrupções globais 
@@ -28,10 +27,10 @@ void config(void) {
     sei();                                  // habilita as interrupções globais
 }
 
-
 ISR(PCINT2_vect) {
-    estado = 1;                          // borda de descida foi detectada
-    *ponteiro_pcmsk2 &= ~0x04; 
+    estado = 1;                           // borda detectada
+    *ponteiro_pcmsk2 &= ~0x04;            // desativa temporariamente a máscara
+    *ponteiro_pcifr  |= 0x04;             // limpa a flag escrevendo 1 no bit PCIF2
 }
 
 unsigned char filtragem(void) {
@@ -50,7 +49,8 @@ void acionamento_led(void) {
             *ponteiro_portb ^= 0x20; 
         }
         
-        estado = 0;                         // retorna ao estado inicial 
+        estado = 0; 
+        *ponteiro_pcifr  |= 0x04;           // retorna ao estado inicial 
         *ponteiro_pcmsk2 |= 0x04;           // reabilita a interrupção INT0
         
     }

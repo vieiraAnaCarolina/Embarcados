@@ -10,7 +10,6 @@ volatile unsigned char *ponteiro_ddrb  = (volatile unsigned char *) 0x24;
 volatile unsigned char *ponteiro_portb = (volatile unsigned char *) 0x25; 
 
 volatile unsigned char *ponteiro_ddrd  = (volatile unsigned char *) 0x2A; 
-volatile unsigned char *ponteiro_portd = (volatile unsigned char *) 0x2B; 
 volatile unsigned char *ponteiro_pind  = (volatile unsigned char *) 0x29; 
 
 volatile unsigned char *ponteiro_EICRA = (volatile unsigned char *) 0x69; 
@@ -21,14 +20,10 @@ void config(void) {
 
     *ponteiro_ddrb  |= 0x20;             // led como saida
     *ponteiro_portb &= ~0x20;            // led começa desligado
-    
     *ponteiro_ddrd  &= ~0x04;            // pd2 como entrada
-    *ponteiro_portd |= 0x04;  
-
 
     *ponteiro_EICRA |= 0x02;
     *ponteiro_EICRA &= ~0x01;
-
     *ponteiro_EIMSK |= 0x01;   
 
     sei();                               // habilita as interrupções globais
