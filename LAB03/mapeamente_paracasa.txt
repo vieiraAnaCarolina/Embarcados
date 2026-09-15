@@ -40,6 +40,9 @@ Nome rotina de tratamento: (PCINT1_vect)
 O grupo PCINT1 cuida de todos os pinos do Port C (os canais que vão de PCINT8 até PCINT14).
 PCINT11 está no bit 3 do PCMSK1 (0x6c)
 
+ligar em 1 o bit 3 do PCMSK1 (0x6C)
+ligar o bit 1 do PCICR (0x68)
+
 ________________________________________________________________________________________________________________
 
 Configurar A3 como entrada
