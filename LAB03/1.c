@@ -14,6 +14,7 @@ volatile unsigned char *ponteiro_pind  = (volatile unsigned char *) 0x29;
 
 volatile unsigned char *ponteiro_EICRA = (volatile unsigned char *) 0x69; 
 volatile unsigned char *ponteiro_EIMSK = (volatile unsigned char *) 0x3D; 
+volatile unsigned char *ponteiro_EIFR =  (volatile unsigned char *) 0x1C;
 
 void config(void) {
     cli();                               // desativa as interrupções globais 
@@ -54,6 +55,7 @@ void acionamento_led(void) {
         }
         
         estado = 0;                      // retorna ao estado inicial
+        *ponteiro_EIFR  |= 0x01;          // zera as flags de interrupção
         *ponteiro_EIMSK |= 0x01;         // reabilita a interrupção INT0
         
     }
@@ -68,5 +70,3 @@ int main(void) {
 
     return 0;
 }
-
-
