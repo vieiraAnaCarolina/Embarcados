@@ -46,7 +46,7 @@ int main(void){
                 *ponteiro_OCR0B += 1;
                 contador = 0;
                 *ponteiro_portb |= 0x20;
-                if (*ponteiro_OCR0B == 249){
+                if (*ponteiro_OCR0B >= 249){
                     estado = 1;
                 }
             }
@@ -55,7 +55,7 @@ int main(void){
                 *ponteiro_OCR0B -= 1;
                  contador = 0;
                  *ponteiro_portb &= ~0x20;
-                  if (*ponteiro_OCR0B == 0){
+                  if (*ponteiro_OCR0B <= 0){
                      estado = 0;
                     }
             }
