@@ -12,7 +12,7 @@ int main(void) {
 
     // Configurações dos pinos
     *ponteiro_ddrb  |= 0x20;  // Liga o BIT 5 do ddrb do led para 1 (SAIDA)
-     *ponteiro_ddrd  &= ~0x04; // Liga o BIT 2 do ddrd do botão para 0 (ENTRADA)
+    *ponteiro_ddrd  &= ~0x04; // Liga o BIT 2 do ddrd do botão para 0 (ENTRADA)
 
     unsigned char estado_anterior = 0x04;
     

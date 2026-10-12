@@ -12,10 +12,12 @@ unsigned char *ponteiro_portb = (unsigned char *) 0x25;
 *ponteiro_ddrb = *ponteiro_ddrb | 0x20;
 
 while (1) {
-*ponteiro_portb = *ponteiro_portb & (~0x20);
-_delay_ms(500);
+    
+    *ponteiro_portb = *ponteiro_portb & (~0x20);
+    _delay_ms(500);
 
-*ponteiro_portb = *ponteiro_portb | 0x20;
-_delay_ms(500);
-}
+    *ponteiro_portb = *ponteiro_portb | 0x20;
+    _delay_ms(500);
+    
+    }
 }

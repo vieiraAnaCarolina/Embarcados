@@ -55,7 +55,7 @@ void acionamento_led(void) {
         }
         
         estado = 0;                      // retorna ao estado inicial
-        *ponteiro_EIFR  |= 0x01;          // zera as flags de interrupção
+        *ponteiro_EIFR  |= 0x01;         // zera as flags de interrupção
         *ponteiro_EIMSK |= 0x01;         // reabilita a interrupção INT0
         
     }

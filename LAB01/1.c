@@ -16,7 +16,7 @@ int extrair_paridade(unsigned char num){ /* realiza a XOR com cada bit do para e
 int par(){
 
     int n = 24;
-    for(int i = 0; i < 4; i++){ /* realiza o shift  e aplica a mascara isolando os 8 bits representantes de cada par*/
+    for(int i = 0; i < 4; i++){ /* realiza o shift e aplica a mascara isolando os 8 bits representantes de cada par*/
         unsigned char valor = sequencia >> n;
         unsigned char num = valor & 0xFF;
         n = n-8;

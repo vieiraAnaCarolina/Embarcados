@@ -1,12 +1,29 @@
-Para o dimmer, considerar que a tensão média controla a interpretação do brilho que nós temos.
-O brilho vai ser mudado com a mudança da tensão média Vm que ele recebe.
-A tensão média é calculada por Vm = V x DutyCycle.
+# Servo Motor (ATmega328P)
 
-O valor que é guardado em OCR0B determina a largura do pulso em nível alto dentro de cada período da onda.
-Ou seja, se temos uma frequência de 1000 Hz, significa que esse valor de 0 a 250 (máx) vai se repetir 1000 vezes em 1 segundo. Só que, e o tempo que vai ficar ligado está relacionado com o valor que guardamos no comparador.
+   Ana Carolina Vieira de Araújo - 248734
+   Maria Letícia Gomes Braga dos Reis - 281318 
 
-Se eu colocar 50, desses 250 ele fica ligado 50, e se eu botar 1, desses 250 ele fica ligado 1. Ou seja, vai parecer ter mais brilho quando deixamos o valor do comparador maior. - e quem controla esse valor será o OCR0B -.
+## Bibliotecas
+- **Bibliotecas Padrão:** `<avr/interrupt.h>`.
+
+## Configuração dos registradores
+|      Registrador       |  Config  |                                  Justificativa                                  |
+| **DDRB** (0x24)        |  0x04    | Define o pino PB2 (pino 10 digital) como saída (OC1B).                          |
+| **TCCR1A** (0x80)      |  0x23    | Configura Fast PWM non-inverting (COM1B1=1) e WGM11=1, WGM10=1.                 |
+| **TCCR1B** (0x81)      |  0x1A    | Define Modo 15 (Fast PWM com TOP em OCR1A) e prescaler 8.                       |
+| **OCR1AH/L** (0x89/88) |  0x9C3F  | Define TOP = 39999 para fixar a frequência de 50 Hz (período de 20 ms).         |
+| **OCR1BH/L** (0x8B/8A) |  0x03E8  | Controla a largura do pulso (duty cycle) para definir o ângulo do servo.        |
+| **TIMSK1**   (0x6F)    |  0x01    | Habilita a interrupção por Overflow do Timer 1 para gerar a base de tempo.      |
 
 
+## Explicação Fluxo Processamento
 
+O fluxo de processamento baseia-se na geração contínua de um sinal PWM de 50 Hz (20 ms de período) no pino 10 (OC1B) através do Timer 1 em Modo 15 (Fast PWM com TOP em OCR1A).
 
+A cada ciclo completo de 20 ms, o temporizador atinge o seu limite (TOP = 39999) e reinicia, disparando automaticamente a interrupção por estouro ISR(TIMER1_OVF_vect). No interior desta rotina, a variável global contador é incrementada em uma unidade.
+
+No fluxo principal (main), o programa mantém-se num laço infinito a monitorizar o valor do contador. Como o objetivo é manter o eixo do servo motor posicionado em cada ângulo durante exatamente 800 ms sem recorrer a esperas ativas bloqueantes (delays), calcula-se a quantidade de ciclos de interrupção necessários: 800 ms / 20 ms = 40 ciclos.
+
+Assim que o contador atinge o limiar de 40 interrupções, o sistema desativa temporariamente as interrupções com cli() para garantir operações seguras e atómicas, zera o contador e avança para o próximo valor do vetor pulsos[12]. 
+
+Em seguida, os novos valores de largura de pulso correspondentes ao ângulo desejado (variando de 0° a 180° e o respetivo retorno) são gravados diretamente nos registradores de 16 bits OCR1B (escrevendo primeiro o byte alto e depois o byte baixo). As interrupções são reativadas com sei(), e o ciclo repete-se indefinidamente, permitindo o movimento fluído do eixo em passos de 30°.

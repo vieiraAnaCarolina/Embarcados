@@ -7,28 +7,36 @@
 volatile unsigned int contador_de_pulsos = 0;
 unsigned long rpm = 0; 
 
-volatile unsigned char *ponteiro_portb = (volatile unsigned char *) 0x25;   // PORTB (pinos 8 a 13)
-volatile unsigned char *ponteiro_portc = (volatile unsigned char *) 0x28;   // PORTC (pinos A0 a A5)
-volatile unsigned char *ponteiro_portd = (volatile unsigned char *) 0x2B;   // PORTD (pinos 0 a 7)
+volatile unsigned char *ponteiro_portb = (volatile unsigned char *) 0x25;   // PORTB (Pinos digitais 8 a 13)
+volatile unsigned char *ponteiro_portc = (volatile unsigned char *) 0x28;   // PORTC (Pinos analógicos A0 a A5 / digitais 14 a 19)
+volatile unsigned char *ponteiro_portd = (volatile unsigned char *) 0x2B;   // PORTD (Pinos digitais 0 a 7)
 
-volatile unsigned char *ponteiro_ddrb  = (volatile unsigned char *) 0x24;   // DDRB
-volatile unsigned char *ponteiro_ddrc  = (volatile unsigned char *) 0x27;   // DDRC
-volatile unsigned char *ponteiro_ddrd  = (volatile unsigned char *) 0x2A;   // DDRD
+volatile unsigned char *ponteiro_ddrb  = (volatile unsigned char *) 0x24;   
+volatile unsigned char *ponteiro_ddrc  = (volatile unsigned char *) 0x27;   
+volatile unsigned char *ponteiro_ddrd  = (volatile unsigned char *) 0x2A;   
 
-volatile unsigned char *ponteiro_PCMSK1  = (volatile unsigned char *) 0x6C; // PCMSK1
-volatile unsigned char *ponteiro_PCICR   = (volatile unsigned char *) 0x68; // PCICR
-volatile unsigned char *ponteiro_pcifr   = (volatile unsigned char *) 0x3B; // PCIFR
+volatile unsigned char *ponteiro_PCICR   = (volatile unsigned char *) 0x68; 
+volatile unsigned char *ponteiro_PCMSK0  = (volatile unsigned char *) 0x6B;
+volatile unsigned char *ponteiro_PCMSK1  = (volatile unsigned char *) 0x6C; 
+volatile unsigned char *ponteiro_PCMSK2  = (volatile unsigned char *) 0x6D; 
+volatile unsigned char *ponteiro_PCIFR   = (volatile unsigned char *) 0x3B; 
 
 void config(void){
+
     cli();
     
-    *ponteiro_ddrb |= 0x20;        // Liga o BIT 5 do ddrb do led para 1 (SAIDA)
-    *ponteiro_ddrc &= ~0x08;       // Limpa o bit 3 do DDRC (configura como ENTRADA)
-    *ponteiro_portc |= 0x08;       // Ativa o pull-up interno no PC3
- 
-    *ponteiro_PCMSK1 |= 0x08;      // Habilita o bit 3 do PCMSK1 (0x6C)
+    *ponteiro_PCICR |= 0x02;       // Habilita PCIER2/1/0 (00000111)
 
-    *ponteiro_PCICR |= 0x02;       // Habilita o bit 1 do PCICR (0x68)
+    *ponteiro_ddrb |= 0x20;        // LEDB SAIDA
+    *ponteiro_ddrc |= 0x20;        // LEDC SAIDA
+    *ponteiro_ddrd |= 0x04;        // LEDD SAIDA
+
+    //verificar cada um que deve ser setado como 1 nos registradores
+    *ponteiro_PCMSK0 |= 0x08;      // 
+    *ponteiro_PCMSK1 |= 0x08;      // 
+    *ponteiro_PCMSK2 |= 0x08;      // 
+
+    *ponteiro_ddrc &= ~0x08;       //Bit 3 do DDRC como ENTRADA
 
     sei();
 }
